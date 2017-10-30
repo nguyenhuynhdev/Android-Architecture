@@ -1,0 +1,112 @@
+ext {
+    //Application version
+    versionCode = 1
+    versionName = '1.0'
+    //Sdk version
+    minSdkVersion = 21
+    targetSdkVersion = 27
+    compileSdkVersion = 27
+    buildToolsVersion = '27.0.0'
+    //Namespace
+    applicationId = 'com.nguyenhuynhdev.architecture'
+    testInstrumentationRunner = 'android.support.test.runner.AndroidJUnitRunner'
+
+    /***************************************PROJECT BUILD******************************************/
+    kotlinVersion = '1.1.51'
+    buildGradleVersion = '3.0.0'
+    gradleLibs = [
+            buildGradle : create('com.android.tools.build', 'gradle', buildGradleVersion),
+            kotlinGradle: create('org.jetbrains.kotlin', 'kotlin-gradle-plugin', kotlinVersion),
+    ]
+    //Project dependencies
+    gradleDependencies = [
+            create('classpath', gradleLibs.buildGradle),
+            create('classpath', gradleLibs.kotlinGradle),
+    ]
+
+    /***************************************MODULES BUILD******************************************/
+    //Android libraries
+    androidVersion = '27.0.0'
+    constraintLayoutVersion = '1.0.2'
+    androidLibs = [
+            appCompat       : create('com.android.support', 'appcompat-v7', androidVersion),
+            constraintLayout: create('com.android.support.constraint', 'constraint-layout', constraintLayoutVersion),
+    ]
+    //Other libraries
+    daggerVersion = '2.12'
+    rxJavaVersion = '2.1.5'
+    rxAndroidVersion = '2.0.1'
+    leakCanaryVersion = '1.5.4'
+    libs = [
+            library       : project(':library'),
+            fileTree      : fileTree(dir: 'libs', include: ['*.jar']),
+            dagger        : "com.google.dagger:dagger:${daggerVersion}",
+            daggerCompiler: "com.google.dagger:dagger-compiler:${daggerVersion}",
+            rxjava        : create('io.reactivex.rxjava2', 'rxjava', rxJavaVersion),
+            rxandroid     : create('io.reactivex.rxjava2', 'rxandroid', rxAndroidVersion),
+            kotlin        : create('org.jetbrains.kotlin', 'kotlin-stdlib-jre8', kotlinVersion),
+            leakCanary    : create('com.squareup.leakcanary', 'leakcanary-android', leakCanaryVersion),
+
+    ]
+    //Test libraries
+    jUnitVersion = '4.12'
+    runnerVersion = '1.0.1'
+    dexmakerVersion = '2.2.0'
+    espressoVersion = '3.0.1'
+    mockitoVersion = '2.10.0'
+    testLibs = [
+            junit          : create('junit', 'junit', jUnitVersion),
+            mockito        : create('org.mockito', 'mockito-inline', mockitoVersion),
+            runner         : create('com.android.support.test', 'runner', runnerVersion),
+            daggerCompiler : create('com.google.dagger', 'dagger-compiler', daggerVersion),
+            kotlinTestJunit: create('org.jetbrains.kotlin', 'kotlin-test-junit', kotlinVersion),
+            dexmakerMockito: create('com.linkedin.dexmaker', 'dexmaker-mockito', dexmakerVersion),
+            espresso       : create('com.android.support.test.espresso', 'espresso-core', espressoVersion),
+    ]
+    // Modules dependencies
+    appDependencies = [
+            create('implementation', libs.fileTree),
+            create('kapt', libs.daggerCompiler),
+            create('implementation', libs.dagger),
+            create('implementation', libs.library),
+            create('implementation', libs.kotlin),
+            create('implementation', libs.rxjava),
+            create('implementation', libs.rxandroid),
+            create('implementation', libs.leakCanary),
+            create('implementation', androidLibs.appCompat),
+            create('implementation', androidLibs.constraintLayout),
+            //Testing
+            create('testImplementation', testLibs.junit),
+            create('testImplementation', testLibs.mockito),
+            create('testImplementation', testLibs.kotlinTestJunit),
+            //Android test
+            create('kaptAndroidTest', testLibs.daggerCompiler),
+            create('androidTestImplementation', testLibs.kotlinTestJunit),
+            create('androidTestImplementation', testLibs.dexmakerMockito),
+            create('androidTestImplementation', testLibs.espresso),
+    ]
+
+    libraryDependencies = [
+            create('implementation', libs.fileTree),
+            create('implementation', libs.kotlin),
+            //Test
+            create('testImplementation', testLibs.junit),
+            create('testImplementation', testLibs.mockito),
+            create('testImplementation', testLibs.kotlinTestJunit),
+            //Android test
+            create('kaptAndroidTest', testLibs.daggerCompiler),
+            create('androidTestImplementation', testLibs.kotlinTestJunit),
+            create('androidTestImplementation', testLibs.dexmakerMockito),
+            create('androidTestImplementation', testLibs.espresso),
+    ]
+}
+
+/***************************************HELPER FUNCTIONS*******************************************/
+
+static create(_group, _name, _version) {
+    return [group: _group, name: _name, version: _version]
+}
+
+static create(_configuration, _dependency) {
+    return [configuration: _configuration, dependency: _dependency]
+}

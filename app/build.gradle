@@ -1,0 +1,33 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+
+def settings = rootProject.extensions.getByName("ext")
+
+android {
+    setCompileSdkVersion(settings.compileSdkVersion)
+    setBuildToolsVersion(settings.buildToolsVersion)
+
+    defaultConfig {
+        versionCode settings.versionCode
+        versionName settings.versionName
+        applicationId settings.applicationId
+        minSdkVersion settings.minSdkVersion
+        targetSdkVersion settings.targetSdkVersion
+        testInstrumentationRunner settings.testInstrumentationRunner
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+//    dataBinding {
+//        enabled = true
+//    }
+}
+
+dependencies {
+    settings.appDependencies.each {
+        add(it.configuration, it.dependency)
+    }
+}

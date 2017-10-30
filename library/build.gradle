@@ -1,0 +1,21 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+def settings = rootProject.extensions.getByName("ext")
+
+android {
+    setCompileSdkVersion(settings.compileSdkVersion)
+    setBuildToolsVersion(settings.buildToolsVersion)
+
+    defaultConfig {
+        minSdkVersion settings.minSdkVersion
+        targetSdkVersion settings.targetSdkVersion
+        testInstrumentationRunner settings.testInstrumentationRunner
+    }
+}
+
+dependencies {
+    settings.libraryDependencies.each {
+        add(it.configuration, it.dependency)
+    }
+}
